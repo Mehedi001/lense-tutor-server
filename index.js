@@ -68,7 +68,11 @@ async function run() {
             res.send(result);
         })
         // send class data to mongodb 
-        
+        app.post('/classes', async (req, res) => {
+            const newClass = req.body;
+            const result = await classesCollection.insertOne(newClass);
+            res.send(result);
+        })
 
 
 
