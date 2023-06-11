@@ -64,6 +64,14 @@ async function run() {
             res.send(result);
         })
 
+        // send data to mongodb 
+        app.post('/users', async (req, res) => {
+            const newUser = req.body;
+            console.log(newUser)
+            const result = await userCollection.insertOne(newUser);
+            res.send(result);
+        })
+
 
 
         // Send a ping to confirm a successful connection
