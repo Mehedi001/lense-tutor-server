@@ -51,18 +51,14 @@ async function run() {
         const userCollection = client.db('lenseTutorDB').collection('user')
 
 
-        // get the data from mongodb 
-        app.get('/user', async (req, res) => {
-            const search = req.query.search;
-            console.log(search)
 
-            const query = { userName: { $regex: search, $options: 'i' } }
-
-
-            const cursor = userCollection.find(query);
-            const result = await cursor.toArray();
-            res.send(result);
+        app.get('/users', async (req, res) => {
+            const role = req.query.role;
+            const query = {role:{ $regex: role, $options: 'i'}};
+            const result = await userCollection.find(query).toArray();
+            res.send(result)
         })
+
 
         // send data to mongodb 
         app.post('/users', async (req, res) => {
