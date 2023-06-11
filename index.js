@@ -49,6 +49,7 @@ async function run() {
         //    client.connect();
 
         const userCollection = client.db('lenseTutorDB').collection('user')
+        const classesCollection = client.db('lenseTutorDB').collection('classes')
 
 
 
@@ -60,13 +61,14 @@ async function run() {
         })
 
 
-        // send data to mongodb 
+        // send user data to mongodb 
         app.post('/users', async (req, res) => {
             const newUser = req.body;
-            console.log(newUser)
             const result = await userCollection.insertOne(newUser);
             res.send(result);
         })
+        // send class data to mongodb 
+        
 
 
 
