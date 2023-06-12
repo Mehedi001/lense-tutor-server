@@ -59,6 +59,17 @@ async function run() {
             const result = await userCollection.find(query).toArray();
             res.send(result)
         })
+        app.get('/classes', async (req, res) => {
+            const result = await classesCollection.find().toArray();
+            res.send(result)
+        })
+
+        app.get('/usermail', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await classesCollection.find(query).toArray();
+            res.send(result)
+        })
 
 
         // send user data to mongodb 
@@ -71,6 +82,24 @@ async function run() {
         app.post('/classes', async (req, res) => {
             const newClass = req.body;
             const result = await classesCollection.insertOne(newClass);
+            res.send(result);
+        })
+
+         // update data
+
+         app.put('/class/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true };
+            const updatedClass = req.body;
+            const classes = {
+                $set: {
+                    name: updatedClass.name,
+                    price: updatedClass.price,
+                    description: updatedClass.description,
+                }
+            }
+            const result = await classesCollection.updateOne(filter, classes, options);
             res.send(result);
         })
 
