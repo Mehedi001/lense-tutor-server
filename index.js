@@ -56,16 +56,26 @@ async function run() {
 
         app.get('/users', async (req, res) => {
             const role = req.query.role;
-            const query = {role:{ $regex: role, $options: 'i'}};
+            const query = { role: { $regex: role, $options: 'i' } };
             const result = await userCollection.find(query).toArray();
             res.send(result)
         })
 
-        
+        app.get('/user', async (req, res) => {
+            const result = await userCollection.find().toArray();
+            res.send(result)
+        })
+
+
+
         app.get('/classes', async (req, res) => {
             const status = "approved";
-            const query = {status: status}
+            const query = { status: status }
             const result = await classesCollection.find(query).toArray();
+            res.send(result)
+        })
+        app.get('/allClass', async (req, res) => {
+            const result = await classesCollection.find().toArray();
             res.send(result)
         })
 
@@ -97,7 +107,7 @@ async function run() {
             const result = await userCollection.insertOne(newUser);
             res.send(result);
         })
-        
+
         app.post('/order', async (req, res) => {
             const newOrder = req.body;
             const result = await orderCollection.insertOne(newOrder);
@@ -111,9 +121,9 @@ async function run() {
             res.send(result);
         })
 
-         // update data
+        // update data
 
-         app.put('/class/:id', async (req, res) => {
+        app.put('/class/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) }
             const options = { upsert: true };
@@ -128,6 +138,19 @@ async function run() {
             const result = await classesCollection.updateOne(filter, classes, options);
             res.send(result);
         })
+        // update user data
+
+        app.put('/user/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true };
+            const updatedUser = req.body;
+            const user = {
+                $set: { role: updatedUser.role }
+            }
+            const result = await userCollection.updateOne(filter, user, options);
+            res.send(result);
+        })
 
         // delete data from database 
 
@@ -135,6 +158,15 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await orderCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        // delete user data from database 
+
+        app.delete('/user/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await userCollection.deleteOne(query);
             res.send(result);
         })
 
