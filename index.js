@@ -50,6 +50,7 @@ async function run() {
 
         const userCollection = client.db('lenseTutorDB').collection('user')
         const classesCollection = client.db('lenseTutorDB').collection('classes')
+        const orderCollection = client.db('lenseTutorDB').collection('order')
 
 
 
@@ -59,8 +60,12 @@ async function run() {
             const result = await userCollection.find(query).toArray();
             res.send(result)
         })
+
+        
         app.get('/classes', async (req, res) => {
-            const result = await classesCollection.find().toArray();
+            const status = "approved";
+            const query = {status: status}
+            const result = await classesCollection.find(query).toArray();
             res.send(result)
         })
 
@@ -71,6 +76,13 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/class/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await classesCollection.findOne(query)
+            res.send(result);
+        })
+
 
         // send user data to mongodb 
         app.post('/users', async (req, res) => {
@@ -78,6 +90,13 @@ async function run() {
             const result = await userCollection.insertOne(newUser);
             res.send(result);
         })
+        
+        app.post('/order', async (req, res) => {
+            const newOrder = req.body;
+            const result = await orderCollection.insertOne(newOrder);
+            res.send(result);
+        })
+
         // send class data to mongodb 
         app.post('/classes', async (req, res) => {
             const newClass = req.body;
@@ -94,7 +113,7 @@ async function run() {
             const updatedClass = req.body;
             const classes = {
                 $set: {
-                    name: updatedClass.name,
+                    className: updatedClass.name,
                     price: updatedClass.price,
                     description: updatedClass.description,
                 }
