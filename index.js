@@ -75,6 +75,13 @@ async function run() {
             const result = await classesCollection.find(query).toArray();
             res.send(result)
         })
+        // order section find via email of student 
+        app.get('/order', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await orderCollection.find(query).toArray();
+            res.send(result)
+        })
 
         app.get('/class/:id', async (req, res) => {
             const id = req.params.id;
