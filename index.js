@@ -78,7 +78,7 @@ async function run() {
         // order section find via email of student 
         app.get('/order', async (req, res) => {
             const email = req.query.email;
-            const query = { email: email };
+            const query = { studentEmail: email };
             const result = await orderCollection.find(query).toArray();
             res.send(result)
         })
@@ -126,6 +126,15 @@ async function run() {
                 }
             }
             const result = await classesCollection.updateOne(filter, classes, options);
+            res.send(result);
+        })
+
+        // delete data from database 
+
+        app.delete('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await orderCollection.deleteOne(query);
             res.send(result);
         })
 
