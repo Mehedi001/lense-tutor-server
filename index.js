@@ -209,6 +209,22 @@ async function run() {
             res.send(result);
         })
 
+        // update order data
+
+        app.put('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true };
+            const updatedOrder = req.body;
+            const order = {
+                $set: {
+                    status: updatedOrder.status
+                }
+            }
+            const result = await orderCollection.updateOne(filter, order, options);
+            res.send(result);
+        })
+
         // delete data from database 
 
         app.delete('/order/:id', async (req, res) => {
