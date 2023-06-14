@@ -100,6 +100,31 @@ async function run() {
             res.send(result);
         })
 
+        // private route for admin 
+        app.get('/users/admin', async (req, res) => {
+            const email = req.query.email;
+            const query = { email }
+            const user = await userCollection.findOne(query)
+            res.send({isAdmin: user?.role==='Admin'})
+            
+        })
+        // private route for Instructor
+        app.get('/users/instructor', async (req, res) => {
+            const email = req.query.email;
+            const query = { email }
+            const user = await userCollection.findOne(query)
+            res.send({isInstructor: user?.role==='Instructor'})
+            
+        })
+        // private route for Instructor
+        app.get('/users/student', async (req, res) => {
+            const email = req.query.email;
+            const query = { email }
+            const user = await userCollection.findOne(query)
+            res.send({isStudent: user?.role==='Student'})
+            
+        })
+
 
         // send user data to mongodb 
         app.post('/users', async (req, res) => {
@@ -170,14 +195,14 @@ async function run() {
 
         // update pending class data
 
-        app.put('/feedStatus/:id', async (req, res) => {
+        app.put('/feedbackStatus/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) }
             const options = { upsert: true };
-            const updatedStatus = req.body;
+            const updatedFeedback = req.body;
             const user = {
                 $set: {
-                    status: updatedStatus.status
+                    feedback: updatedFeedback.feedback
                 }
             }
             const result = await classesCollection.updateOne(filter, user, options);
