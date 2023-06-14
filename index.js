@@ -152,6 +152,38 @@ async function run() {
             res.send(result);
         })
 
+        // update status data
+
+        app.put('/classStatus/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true };
+            const updatedStatus = req.body;
+            const user = {
+                $set: {
+                    status: updatedStatus.status
+                }
+            }
+            const result = await classesCollection.updateOne(filter, user, options);
+            res.send(result);
+        })
+
+        // update pending class data
+
+        app.put('/feedStatus/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true };
+            const updatedStatus = req.body;
+            const user = {
+                $set: {
+                    status: updatedStatus.status
+                }
+            }
+            const result = await classesCollection.updateOne(filter, user, options);
+            res.send(result);
+        })
+
         // delete data from database 
 
         app.delete('/order/:id', async (req, res) => {
